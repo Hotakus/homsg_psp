@@ -39,3 +39,19 @@ homsg_subject_node_t *homsg_create_subject(const char *desc) {
     subject->subscribers = NULL;
     return subject;
 }
+
+#include "hca.h"
+
+int main() {
+    chain_t *chain = chain_create("First chain");
+
+//    chain->insert(chain, chain->node_new(chain, "test"), "tail", true);
+//    chain->insert(chain, chain->node_new(chain, "test"), "tail", true);
+//    chain->insert(chain, chain->node_new(chain, "test2"), "tail", false);
+    chain->insert(chain, chain->node_new("test2", NULL), "head", false);
+    chain->append(chain, chain->node_new("testa", NULL));
+    chain->append(chain, chain->node_new("tests", NULL));
+
+    chain->poll(chain, "head");
+    return 0;
+}

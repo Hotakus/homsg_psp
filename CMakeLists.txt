@@ -48,13 +48,15 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin) # 可执行文件
 add_definitions(-DDUMMY_DEFINE)
 add_compile_options(-fdata-sections -ffunction-sections -Wall)
 add_link_options(-Wl,-Map=object.map,--cref,--gc-section)
+
 include_directories(./inc ./)
+include_directories(./src/calgorithms)
 
 #file(GLOB_RECURSE SOURCES "./*.c" "./*.h")
-#add_subdirectory(./eg)
+add_subdirectory(./src/calgorithms)
 
 #message(WARNING     "${LINK_FLAGS}")
 #message(WARNING     "${CMAKE_C_FLAGS}")
 
 add_executable(homsg_psp homsg_psp.c)
-#target_link_libraries(holog eg)
+target_link_libraries(homsg_psp hca)
