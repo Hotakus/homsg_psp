@@ -47,6 +47,10 @@ typedef struct homsg_psp_t {
     homsg_subject_t *(*create_subject)(char *desc);
     void (*destroy_subject)(homsg_subject_t *subject);
 
+#if HOMSG_SP_USE_PTHREAD == 1
+    pthread_mutex_t mutex;
+#endif
+
     // TODO: whether use functions of subjects and subscribers manager
 #if (HOMSG_SP_USE_SS_MANAGER == 1)
     chain_t *all_subjects;
@@ -57,7 +61,6 @@ typedef struct homsg_psp_t {
         homsg_res_t (*publish)(homsg_psp_t *psp, homsg_subject_t *subject);
         homsg_res_t (*revoke)(homsg_psp_t *psp, homsg_subject_t *subject);
     };
-
 #endif
 
     // publisher
@@ -67,13 +70,8 @@ typedef struct homsg_psp_t {
 
     // subscriber
     struct {
-#if (HOMSG_SP_USE_SS_MANAGER == 1)
         homsg_res_t (*subscribe)(homsg_psp_t *psp, homsg_subject_t *subject, char *subscriber_name, homsg_subscriber_update_callback_t update);
         homsg_res_t (*unsubscribe)(homsg_psp_t *psp, homsg_subject_t *subject, char *subscriber_name);
-#else
-        homsg_res_t (*subscribe)(homsg_subject_t *subject, char *subscriber_name, homsg_subscriber_update_callback_t update);
-        homsg_res_t (*unsubscribe)(homsg_subject_t *subject, char *subscriber_name);
-#endif
     };
 } homsg_psp_t;
 

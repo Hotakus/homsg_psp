@@ -21,14 +21,10 @@ void homsg_destroy_subject(homsg_subject_t *subject);
 static homsg_res_t homsg_find_subject(homsg_psp_t *psp, char *desc);
 static homsg_res_t homsg_publish(homsg_psp_t *psp, homsg_subject_t *subject);
 static homsg_res_t homsg_revoke(homsg_psp_t *psp, homsg_subject_t *subject);
+#endif
 
 static homsg_res_t homsg_subscribe(homsg_psp_t *psp, homsg_subject_t *subject, char *subscriber_name, homsg_subscriber_update_callback_t update);
 static homsg_res_t homsg_unsubscribe(homsg_psp_t *psp, homsg_subject_t *subject, char *subscriber_name);
-#else
-static homsg_res_t homsg_subscribe(homsg_subject_t *subject, char *subscriber_name, homsg_subscriber_update_callback_t update);
-static homsg_res_t homsg_unsubscribe(homsg_subject_t *subject, char *subscriber_name);
-#endif
-
 static homsg_res_t homsg_notify(homsg_subject_t *subject, void *msg);
 
 
@@ -57,6 +53,10 @@ homsg_psp_t *homsg_psp_create() {
     psp->subscribe = homsg_subscribe;
     psp->unsubscribe = homsg_unsubscribe;
 
+#if (HOMSG_SP_USE_PTHREAD == 1)
+    HOMSG_SP_PTHREAD_MUTEX_INIT(&psp->mutex);
+#endif
+
     return psp;
 }
 
@@ -64,7 +64,11 @@ void homsg_psp_destroy(homsg_psp_t *psp) {
     if (psp == NULL) {
         return;
     }
-    // TODO
+
+#if (HOMSG_SP_USE_PTHREAD == 1)
+    HOMSG_SP_PTHREAD_MUTEX_LOCK(&psp->mutex);
+#endif
+
 #if (HOMSG_SP_USE_SS_MANAGER == 1)
     // free all subscribers in subjects
     chain_node_t *node = psp->all_subjects->head->next_node;
@@ -79,6 +83,10 @@ void homsg_psp_destroy(homsg_psp_t *psp) {
     chain_destroy(psp->all_subjects);
 #endif
 
+#if (HOMSG_SP_USE_PTHREAD == 1)
+    HOMSG_SP_PTHREAD_MUTEX_UNLOCK(&psp->mutex);
+    HOMSG_SP_PTHREAD_MUTEX_DESTROY(&psp->mutex);
+#endif
     HOMSG_SP_FREE(psp);
 }
 
@@ -115,6 +123,10 @@ homsg_res_t homsg_publish(homsg_psp_t *psp, homsg_subject_t *subject) {
         return HOMSG_RES_ERROR;
     }
 
+#if (HOMSG_SP_USE_PTHREAD == 1)
+    HOMSG_SP_PTHREAD_MUTEX_LOCK(&psp->mutex);
+#endif
+
     if (chain_find_node_by_name(psp->all_subjects, subject->subscribers->desc, true) != NULL) {
         printf("subject %s already published\n\r", subject->subscribers->desc);
         return HOMSG_RES_ALREADY_PUBLISHED;
@@ -126,6 +138,11 @@ homsg_res_t homsg_publish(homsg_psp_t *psp, homsg_subject_t *subject) {
     }
 
     chain_append(psp->all_subjects, _subject);
+
+#if (HOMSG_SP_USE_PTHREAD == 1)
+    HOMSG_SP_PTHREAD_MUTEX_UNLOCK(&psp->mutex);
+#endif
+
     return HOMSG_RES_OK;
 }
 
@@ -139,7 +156,14 @@ homsg_res_t homsg_revoke(homsg_psp_t *psp, homsg_subject_t *subject) {
     if (psp == NULL || subject == NULL) {
         return HOMSG_RES_ERROR;
     }
+#if (HOMSG_SP_USE_PTHREAD == 1)
+    HOMSG_SP_PTHREAD_MUTEX_LOCK(&psp->mutex);
+#endif
     chain_remove_node(psp->all_subjects, subject->subscribers->desc, NULL, false);
+#if (HOMSG_SP_USE_PTHREAD == 1)
+    HOMSG_SP_PTHREAD_MUTEX_UNLOCK(&psp->mutex);
+#endif
+
     return HOMSG_RES_OK;
 }
 
@@ -163,15 +187,14 @@ homsg_res_t homsg_notify(homsg_subject_t *subject, void *msg) {
     return HOMSG_RES_OK;
 }
 
-homsg_res_t homsg_subscribe(
-#if (HOMSG_SP_USE_SS_MANAGER == 1)
-        homsg_psp_t *psp,
-#endif
-        homsg_subject_t *subject, char *subscriber_name, homsg_subscriber_update_callback_t update
-) {
+homsg_res_t homsg_subscribe(homsg_psp_t *psp, homsg_subject_t *subject, char *subscriber_name, homsg_subscriber_update_callback_t update) {
     if (subject == NULL || update == NULL) {
         return HOMSG_RES_ERROR;
     }
+
+#if (HOMSG_SP_USE_PTHREAD == 1)
+    HOMSG_SP_PTHREAD_MUTEX_LOCK(&psp->mutex);
+#endif
 
     chain_node_t *subscriber = NULL;
 #if (HOMSG_SP_USE_SS_MANAGER == 1)
@@ -201,18 +224,21 @@ homsg_res_t homsg_subscribe(
     subject->subscribers->head->id += 1;    // How many subscribers in this subject
     subscriber->id += 1;                    // How many subjects this subscriber is subscribed
     chain_append(subject->subscribers, subscriber);
+
+#if (HOMSG_SP_USE_PTHREAD == 1)
+    HOMSG_SP_PTHREAD_MUTEX_UNLOCK(&psp->mutex);
+#endif
     return HOMSG_RES_OK;
 }
 
-homsg_res_t homsg_unsubscribe(
-#if (HOMSG_SP_USE_SS_MANAGER == 1)
-        homsg_psp_t *psp,
-#endif
-        homsg_subject_t *subject, char *subscriber_name
-) {
+homsg_res_t homsg_unsubscribe(homsg_psp_t *psp, homsg_subject_t *subject, char *subscriber_name) {
     if (psp == NULL || subject == NULL) {
         return HOMSG_RES_ERROR;
     }
+
+#if (HOMSG_SP_USE_PTHREAD == 1)
+    HOMSG_SP_PTHREAD_MUTEX_LOCK(&psp->mutex);
+#endif
 
     chain_node_t *subscriber = NULL;
 #if (HOMSG_SP_USE_SS_MANAGER == 1)
@@ -237,6 +263,10 @@ homsg_res_t homsg_unsubscribe(
     subject->subscribers->head->id -= 1;    // How many subscribers in this subject
     subscriber->id -= 1;                    // How many subjects this subscriber is subscribed
     chain_remove_node(subject->subscribers, NULL, subscriber, false);
+
+#if (HOMSG_SP_USE_PTHREAD == 1)
+    HOMSG_SP_PTHREAD_MUTEX_UNLOCK(&psp->mutex);
+#endif
     return HOMSG_RES_OK;
 }
 
@@ -252,7 +282,9 @@ int main() {
 
     printf("----------------------- publish\n\r");
     homsg_subject_t *subject = psp->create_subject("test");
+#if (HOMSG_SP_USE_SS_MANAGER == 1)
     psp->publish(psp, subject);
+#endif
 
     printf("----------------------- subscribe\n\r");
     char subscriber[5][5] = {"sub1", "sub2", "sub3", "sub4", "sub5"};
@@ -273,6 +305,9 @@ int main() {
     printf("----------------------- notify 2\n\r");
     psp->notify(subject, "My name is Hotakus");
 
+#if (HOMSG_SP_USE_SS_MANAGER == 0)
+    psp->destroy_subject(subject);
+#endif
     homsg_psp_destroy(psp);
     return 0;
 }
