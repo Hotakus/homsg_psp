@@ -12,6 +12,7 @@
 
 #include <stdint.h>
 #include "homsg_psp_conf.h"
+#include "chain.h"
 
 
 #ifdef __cplusplus
@@ -21,36 +22,63 @@ extern "C" {
 typedef enum homsg_res_t homsg_res_t;
 typedef enum homsg_res_t {
     HOMSG_RES_OK = 0,
-    HOMSG_RES_ERROR
+    HOMSG_RES_ERROR,
+    HOMSG_RES_NO_SUBSCRIBER,
+    HOMSG_RES_ALREADY_SUBSCRIBED,
+    HOMSG_RES_ALREADY_REGISTERED,
+    HOMSG_RES_ALREADY_PUBLISHED,
+    HOMSG_RES_NOT_REGISTERED,
+    HOMSG_RES_NOT_PUBLISHED,
 } homsg_res_t;
+
+
+typedef struct homsg_subject_t homsg_subject_t;
+typedef struct homsg_subject_t {
+    chain_t *subscribers;
+} homsg_subject_t;
 
 // update callback
 typedef void (*homsg_subscriber_update_callback_t)(void *msg);
 
-typedef struct homsg_subscriber_node_t homsg_subscriber_node_t;
-typedef struct homsg_subscriber_node_t {
-    size_t index;
-    homsg_subscriber_update_callback_t update;
-} homsg_subscriber_node_t;
+typedef struct homsg_psp_t homsg_psp_t;
+typedef struct homsg_psp_t {
 
-typedef struct homsg_subject_node_t homsg_subject_node_t;
-typedef struct homsg_subject_node_t {
-    size_t cnt;
-    homsg_subscriber_node_t **subscribers;
-} homsg_subject_node_t;
+    //create subject
+    homsg_subject_t *(*create_subject)(char *desc);
+    void (*destroy_subject)(homsg_subject_t *subject);
 
+    // TODO: whether use functions of subjects and subscribers manager
+#if (HOMSG_SP_USE_SS_MANAGER == 1)
+    chain_t *all_subjects;
 
-typedef struct homsg_sp_t homsg_sp_t;
-typedef struct homsg_sp_t {
     struct {
-        // publish a new subject
-        homsg_subject_node_t *(*create_subject)(const char *desc);
+        homsg_res_t (*find_subject)(homsg_psp_t *psp, char *desc);
 
+        homsg_res_t (*publish)(homsg_psp_t *psp, homsg_subject_t *subject);
+        homsg_res_t (*revoke)(homsg_psp_t *psp, homsg_subject_t *subject);
     };
-} homsg_sp_t;
 
-homsg_sp_t *homsg_sp_create();
-void homsg_sp_destroy(homsg_sp_t *sp);
+#endif
+
+    // publisher
+    struct {
+        homsg_res_t (*notify)(homsg_subject_t *subject, void *msg);
+    };
+
+    // subscriber
+    struct {
+#if (HOMSG_SP_USE_SS_MANAGER == 1)
+        homsg_res_t (*subscribe)(homsg_psp_t *psp, homsg_subject_t *subject, char *subscriber_name, homsg_subscriber_update_callback_t update);
+        homsg_res_t (*unsubscribe)(homsg_psp_t *psp, homsg_subject_t *subject, char *subscriber_name);
+#else
+        homsg_res_t (*subscribe)(homsg_subject_t *subject, char *subscriber_name, homsg_subscriber_update_callback_t update);
+        homsg_res_t (*unsubscribe)(homsg_subject_t *subject, char *subscriber_name);
+#endif
+    };
+} homsg_psp_t;
+
+homsg_psp_t *homsg_psp_create();
+void homsg_psp_destroy(homsg_psp_t *psp);
 
 #ifdef __cplusplus
 }

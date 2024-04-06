@@ -50,13 +50,14 @@ add_compile_options(-fdata-sections -ffunction-sections -Wall)
 add_link_options(-Wl,-Map=object.map,--cref,--gc-section)
 
 include_directories(./inc ./)
-include_directories(./src/calgorithms)
+include_directories(./src/)
+include_directories(./src/chain)
 
 #file(GLOB_RECURSE SOURCES "./*.c" "./*.h")
-add_subdirectory(./src/calgorithms)
+add_subdirectory(./src/chain)
 
 #message(WARNING     "${LINK_FLAGS}")
 #message(WARNING     "${CMAKE_C_FLAGS}")
 
-add_executable(homsg_psp homsg_psp.c)
-target_link_libraries(homsg_psp hca)
+add_executable(homsg_psp src/homsg_psp.c)
+target_link_libraries(homsg_psp chain)
