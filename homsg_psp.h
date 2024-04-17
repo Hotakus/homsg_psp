@@ -78,6 +78,10 @@ typedef struct homsg_psp_t {
 homsg_psp_t *homsg_psp_create();
 void homsg_psp_destroy(homsg_psp_t *psp);
 
+#if (HOMSG_SP_TEST == 1)
+void homsg_test();
+#endif
+
 #ifdef __cplusplus
 }
 #endif // __cplusplus

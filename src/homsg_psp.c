@@ -277,7 +277,7 @@ void test_update(void *msg) {
     printf("test_update got msg: %s\n\r", msg_str ? msg_str : "NULL");
 }
 
-int main() {
+void homsg_test() {
     homsg_psp_t *psp = homsg_psp_create();
 
     printf("----------------------- publish\n\r");
