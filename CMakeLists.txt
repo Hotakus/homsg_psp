@@ -7,7 +7,7 @@ project(homsg_psp
 )
 set(CMAKE_C_STANDARD 99)
 
-include(../../toolchain.cmake)
+# include(../../toolchain.cmake)
 
 # 指定版本号的配置文件
 configure_file(${PROJECT_SOURCE_DIR}/version.h.in ${PROJECT_SOURCE_DIR}/version.h)
@@ -23,8 +23,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin) # 可执行文件
 
 # main add
 add_definitions(-DDUMMY_DEFINE)
-add_compile_options(-fdata-sections -ffunction-sections -Wall)
-add_link_options(-Wl,-Map=object.map,--cref,--gc-section)
+#add_compile_options(-fdata-sections -ffunction-sections -Wall)
+#add_link_options(-Wl,-Map=object.map,--cref,--gc-section)
 
 include_directories(./inc ./)
 include_directories(./src/)
