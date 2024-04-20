@@ -16,11 +16,11 @@
 
 #define HOMSG_SP_USE_PTHREAD 0
 #if (HOMSG_SP_USE_PTHREAD == 1)
-#include <pthread.h>
-#define HOMSG_SP_PTHREAD_MUTEX_INIT(x) pthread_mutex_init(x, NULL)
-#define HOMSG_SP_PTHREAD_MUTEX_DESTROY(x) pthread_mutex_destroy(x)
-#define HOMSG_SP_PTHREAD_MUTEX_LOCK(x) pthread_mutex_lock(x)
-#define HOMSG_SP_PTHREAD_MUTEX_UNLOCK(x) pthread_mutex_unlock(x)
+//#include <pthread.h>
+//#define HOMSG_SP_PTHREAD_MUTEX_INIT(x) pthread_mutex_init(x, NULL)
+//#define HOMSG_SP_PTHREAD_MUTEX_DESTROY(x) pthread_mutex_destroy(x)
+//#define HOMSG_SP_PTHREAD_MUTEX_LOCK(x) pthread_mutex_lock(x)
+//#define HOMSG_SP_PTHREAD_MUTEX_UNLOCK(x) pthread_mutex_unlock(x)
 #endif
 
 #define HOMSG_SP_USE_SS_MANAGER 1
