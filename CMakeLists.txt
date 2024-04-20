@@ -32,11 +32,11 @@ include_directories(./src/)
 include_directories(./src/chain)
 
 #file(GLOB_RECURSE SOURCES "./*.c" "./*.h")
-add_subdirectory(./src/chain)
+#add_subdirectory(./src/chain)
 
 #message(WARNING     "${LINK_FLAGS}")
 #message(WARNING     "${CMAKE_C_FLAGS}")
 
 #add_executable(homsg_psp src/homsg_psp.c)
-add_library(homsg_psp src/homsg_psp.c)
-target_link_libraries(homsg_psp chain)
+add_library(homsg_psp src/homsg_psp.c src/chain/chain.c)
+#target_link_libraries(homsg_psp chain)
