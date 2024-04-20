@@ -7,7 +7,6 @@ project(homsg_psp
 )
 set(CMAKE_C_STANDARD 99)
 
-include(../../toolchain.cmake)
 
 
 # 指定版本号的配置文件
@@ -37,6 +36,7 @@ include_directories(./src/chain)
 #message(WARNING     "${LINK_FLAGS}")
 #message(WARNING     "${CMAKE_C_FLAGS}")
 
+include(../../toolchain.cmake)
 #add_executable(homsg_psp src/homsg_psp.c)
 add_library(homsg_psp src/homsg_psp.c src/chain/chain.c)
 #target_link_libraries(homsg_psp chain)
