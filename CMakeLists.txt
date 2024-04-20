@@ -8,7 +8,5 @@ include_directories(. LIB_INC)
 
 add_subdirectory(./src/chain)
 
-#target_link_libraries(datastructures hba)
-#add_executable(homsg_psp src/homsg_psp.c)
 add_library(homsg_psp src/homsg_psp.c)
 target_link_libraries(homsg_psp chain)
