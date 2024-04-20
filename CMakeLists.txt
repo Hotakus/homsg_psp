@@ -6,6 +6,7 @@ aux_source_directory(. LIB_SRCS)
 include_directories(include LIB_INC)
 include_directories(. LIB_INC)
 
+add_subdirectory(./src/chain)
 
 #target_link_libraries(datastructures hba)
 #add_executable(homsg_psp src/homsg_psp.c)
