@@ -6,3 +6,4 @@ include_directories(. LIB_INC)
 
 # 生成链接库
 add_library (chain ${LIB_SRCS} ${LIB_INC})
+target_include_directories(chain PUBLIC ${LIB_INC})

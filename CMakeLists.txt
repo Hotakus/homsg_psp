@@ -20,11 +20,10 @@ add_definitions(-DDUMMY_DEFINE)
 #add_compile_options(-fdata-sections -ffunction-sections -Wall)
 #add_link_options(-Wl,-Map=object.map,--cref,--gc-section)
 
-include_directories(./inc ./)
-include_directories(./src/)
-include_directories(./src/chain)
+include_directories(./inc ./ ./src/chain ./src/ LIB_INC)
 
 add_subdirectory(./src/chain)
 
 add_library(homsg_psp src/homsg_psp.c)
 target_link_libraries(homsg_psp chain)
+target_include_directories(homsg_psp PUBLIC ${LIB_INC})
