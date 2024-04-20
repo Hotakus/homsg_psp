@@ -13,7 +13,7 @@ homsg_subject_t *homsg_create_subject(char *desc);
 void homsg_destroy_subject(homsg_subject_t *subject);
 
 #if (HOMSG_SP_USE_SS_MANAGER == 1)
-static homsg_res_t homsg_find_subject(homsg_psp_t *psp, char *desc);
+//static homsg_res_t homsg_find_subject(homsg_psp_t *psp, char *desc);
 static homsg_res_t homsg_publish(homsg_psp_t *psp, homsg_subject_t *subject);
 static homsg_res_t homsg_revoke(homsg_psp_t *psp, homsg_subject_t *subject);
 #endif

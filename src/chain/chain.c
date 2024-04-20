@@ -240,10 +240,10 @@ void chain_append(chain_t *chain, chain_node_t *node) {
 }
 
 
-// TODO: pop
-chain_node_t *chain_pop(chain_t *chain) {
-
-}
+//// TODO: pop
+//chain_node_t *chain_pop(chain_t *chain) {
+//
+//}
 
 
 /**
@@ -383,15 +383,15 @@ void chain_node_connect(chain_node_t *dst_node, chain_node_t *src_node, bool fro
  * @param dst_node
  * @param src_node
  */
-void nodes_swap(chain_node_t *dst_node, chain_node_t *src_node) {
-    chain_node_t *dst_prev_node = dst_node->prev_node;
-    chain_node_t *dst_next_node = dst_node->next_node;
-
-    chain_node_t *src_prev_node = src_node->prev_node;
-    chain_node_t *src_next_node = src_node->next_node;
-
-
-}
+//void nodes_swap(chain_node_t *dst_node, chain_node_t *src_node) {
+//    chain_node_t *dst_prev_node = dst_node->prev_node;
+//    chain_node_t *dst_next_node = dst_node->next_node;
+//
+//    chain_node_t *src_prev_node = src_node->prev_node;
+//    chain_node_t *src_next_node = src_node->next_node;
+//
+//
+//}
 
 
 /**
@@ -538,15 +538,15 @@ chain_node_t *chain_get_loop_end_node(chain_t *chain) {
 }
 
 
-chain_t *chain_merge(chain_t *chain1, chain_t *chain2) {
-    if (chain1 == NULL || chain2 == NULL)
-        return NULL;
-
-    chain_t *chain3 = (chain_t *)calloc(1, sizeof(chain_t));
-
-
-    return NULL;
-}
+//chain_t *chain_merge(chain_t *chain1, chain_t *chain2) {
+//    if (chain1 == NULL || chain2 == NULL)
+//        return NULL;
+//
+//    chain_t *chain3 = (chain_t *)calloc(1, sizeof(chain_t));
+//
+//
+//    return NULL;
+//}
 
 
 void chain_flush(chain_t *chain) {
