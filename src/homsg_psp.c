@@ -9,11 +9,6 @@
 #include <stdio.h>
 #include "homsg_psp.h"
 
-#if (HOMSG_SP_USE_PTHREAD == 1)
-#include <pthread.h>
-
-#endif
-
 homsg_subject_t *homsg_create_subject(char *desc);
 void homsg_destroy_subject(homsg_subject_t *subject);
 
@@ -283,7 +278,7 @@ void homsg_test() {
     psp->destroy_subject(subject);
 #endif
     homsg_psp_destroy(psp);
-    return 0;
+    return;
 }
 
 #endif
