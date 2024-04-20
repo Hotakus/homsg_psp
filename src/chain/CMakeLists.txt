@@ -5,5 +5,7 @@ include_directories(include LIB_INC)
 include_directories(. LIB_INC)
 
 # 生成链接库
-add_library (chain ${LIB_SRCS} ${LIB_INC})
-target_include_directories(chain PUBLIC ${LIB_INC})
+add_library(chain ${LIB_SRCS} ${LIB_INC})
+target_include_directories(chain PUBLIC
+                           ${CMAKE_CURRENT_SOURCE_DIR}/
+)

@@ -26,4 +26,7 @@ add_subdirectory(./src/chain)
 
 add_library(homsg_psp src/homsg_psp.c)
 target_link_libraries(homsg_psp chain)
-target_include_directories(homsg_psp PUBLIC ${LIB_INC})
+target_include_directories(homsg_psp PUBLIC
+                           ${CMAKE_CURRENT_SOURCE_DIR}/
+                           ${CMAKE_CURRENT_SOURCE_DIR}/src/chain
+)
