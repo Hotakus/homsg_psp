@@ -1,5 +1,13 @@
+cmake_minimum_required(VERSION 3.20)
+project(homsg_psp
+        LANGUAGES C
+        VERSION 1.0.0.0
+        DESCRIPTION "Publish-Subscribe Pattern"
+        HOMEPAGE_URL https://github.com/Hotakus/hhtl
+)
+set(CMAKE_C_STANDARD 99)
 
-include(${PROJECT_SOURCE_DIR}/toolchain.cmake)
+include(../../toolchain.cmake)
 
 # 指定版本号的配置文件
 configure_file(${PROJECT_SOURCE_DIR}/version.h.in ${PROJECT_SOURCE_DIR}/version.h)
