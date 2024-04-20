@@ -14,7 +14,7 @@
 #define HOMSG_SP_DIR_TWO 2
 #define HOMSG_SP_DIR HOMSG_SP_DIR_TWO
 
-#define HOMSG_SP_USE_PTHREAD 1
+#define HOMSG_SP_USE_PTHREAD 0
 #if (HOMSG_SP_USE_PTHREAD == 1)
 #include <pthread.h>
 #define HOMSG_SP_PTHREAD_MUTEX_INIT(x) pthread_mutex_init(x, NULL)
