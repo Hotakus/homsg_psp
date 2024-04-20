@@ -7,7 +7,7 @@ project(homsg_psp
 )
 set(CMAKE_C_STANDARD 99)
 
-include(../../toolchain.cmake)
+#include(../../toolchain.cmake)
 
 
 # 指定版本号的配置文件
