@@ -9,6 +9,7 @@ set(CMAKE_C_STANDARD 99)
 
 include(../../toolchain.cmake)
 
+
 # 指定版本号的配置文件
 configure_file(${PROJECT_SOURCE_DIR}/version.h.in ${PROJECT_SOURCE_DIR}/version.h)
 
